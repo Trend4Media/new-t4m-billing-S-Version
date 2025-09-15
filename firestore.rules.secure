@@ -1,0 +1,154 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             request.auth.token.role == 'admin';
+    }
+    
+    function isManager() {
+      return isAuthenticated() && 
+             request.auth.token.role == 'manager';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && 
+             request.auth.uid == userId;
+    }
+    
+    function isValidManagerId(managerId) {
+      return managerId is string && 
+             managerId.matches('^manager_[a-zA-Z0-9_]+$');
+    }
+    
+    function isValidCreatorId(creatorId) {
+      return creatorId is string && 
+             creatorId.matches('^creator_[a-zA-Z0-9_]+$');
+    }
+    
+    function isValidBatchId(batchId) {
+      return batchId is string && 
+             batchId.matches('^batch_[0-9]+_[a-zA-Z0-9]+$');
+    }
+    
+    // DENY BY DEFAULT - All access is denied unless explicitly allowed
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // Managers collection - Admin only
+    match /managers/{managerId} {
+      allow read: if isAuthenticated() && (isAdmin() || isManager());
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Creators collection - Admin only
+    match /creators/{creatorId} {
+      allow read: if isAuthenticated() && (isAdmin() || isManager());
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Transactions collection - Role-based access
+    match /transactions/{transactionId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        (isManager() && resource.data.liveManagerId == request.auth.uid) ||
+        (isManager() && resource.data.teamManagerId == request.auth.uid)
+      );
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Bonuses collection - Role-based access
+    match /bonuses/{bonusId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        (isManager() && resource.data.managerId == request.auth.uid)
+      );
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Upload batches collection - Admin only
+    match /uploadBatches/{batchId} {
+      allow read: if isAuthenticated() && (isAdmin() || isManager());
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Genealogy collection - Admin only
+    match /genealogy/{genealogyId} {
+      allow read: if isAuthenticated() && (isAdmin() || isManager());
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Payouts collection - Role-based access
+    match /payouts/{payoutId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        (isManager() && resource.data.managerHandle == request.auth.uid)
+      );
+      allow create: if isAuthenticated(); // Managers can create payout requests
+      allow update: if isAdmin(); // Only admins can update payout status
+      allow delete: if isAdmin();
+    }
+    
+    // Messages collection - Role-based access
+    match /messages/{messageId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        (isManager() && resource.data.userHandle == request.auth.uid)
+      );
+      allow create: if isAdmin();
+      allow update: if isAuthenticated() && (
+        isAdmin() || 
+        (isManager() && resource.data.userHandle == request.auth.uid)
+      );
+      allow delete: if isAdmin();
+    }
+    
+    // Audit logs collection - Admin only, immutable
+    match /audit-logs/{auditId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated();
+      allow update: if false; // Audit logs are immutable
+      allow delete: if false; // Audit logs are immutable
+    }
+    
+    // Manager monthly net collection - Admin only
+    match /managerMonthlyNet/{docId} {
+      allow read: if isAuthenticated() && (isAdmin() || isManager());
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // System configuration - Admin only
+    match /config/{configId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // User profiles - Self or admin access only
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if isOwner(userId) || isAdmin();
+    }
+  }
+}

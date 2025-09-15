@@ -12,7 +12,12 @@
     "logs": "firebase functions:log",
     "test": "jest",
     "test:watch": "jest --watch",
-    "lint": "eslint *.js --fix"
+    "lint": "eslint *.js --fix",
+    "seed": "node seed-firestore-data.js",
+    "setup:firebase": "firebase init firestore && firebase init functions && firebase init hosting",
+    "deploy:all": "firebase deploy",
+    "deploy:rules": "firebase deploy --only firestore:rules",
+    "deploy:indexes": "firebase deploy --only firestore:indexes"
   },
   "engines": {
     "node": "20"

@@ -1,38 +1,33 @@
 #!/usr/bin/env node
 
 /**
- * 🔥 Firestore Seed Script - T4M Billing System
+ * 🔥 T4M Billing - Firestore Seed Script
  * 
- * This script populates the Firestore database with initial data
- * for testing and development purposes.
+ * Spezifisch für das t4m-billing Firebase-Projekt
  * 
  * Usage:
- *   node seed-firestore-data.js
- *   npm run seed
+ *   node seed-t4m-billing.js
+ *   npm run seed:t4m
  */
 
 const admin = require('firebase-admin');
 
-// Initialize Firebase Admin
-// Option 1: Mit Service Account Key (empfohlen für lokale Entwicklung)
-try {
-  const serviceAccount = require('./service-account-key.json');
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    projectId: 't4m-billing'
-  });
-  console.log('✅ Firebase Admin mit Service Account Key initialisiert');
-} catch (error) {
-  // Option 2: Mit Application Default Credentials (für Firebase Functions)
-  admin.initializeApp({
-    projectId: 't4m-billing'
-  });
-  console.log('✅ Firebase Admin mit Application Default Credentials initialisiert');
-}
+// Service Account Key laden
+const serviceAccount = require('./service-account-key.json');
+
+// Initialize Firebase Admin für t4m-billing
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  projectId: 't4m-billing'
+});
 
 const db = admin.firestore();
 
-// Sample data
+console.log('🚀 T4M Billing - Firestore Seeding gestartet');
+console.log('Projekt: t4m-billing');
+console.log('=====================================');
+
+// Sample data für t4m-billing
 const sampleManagers = [
   {
     id: 'manager_john_doe',
@@ -130,7 +125,7 @@ const sampleGenealogy = [
 
 const sampleTransactions = [
   {
-    id: 'trans_sample_1',
+    id: 'trans_t4m_1',
     creatorId: 'creator_creator1',
     creatorName: 'Creator One',
     creatorHandle: 'creator1',
@@ -146,12 +141,12 @@ const sampleTransactions = [
     downlineIncome: { levelA: 0, levelB: 0, levelC: 0, total: 0 },
     liveMilestoneBonuses: { S: 75, N: 150, O: 400, P: 100 },
     teamMilestoneBonuses: { S: 80, N: 165, O: 450, P: 120 },
-    batchId: 'batch_sample_1',
+    batchId: 'batch_t4m_1',
     createdAt: admin.firestore.Timestamp.now(),
     calculationVersion: 'DEFINITIVE_v1.0'
   },
   {
-    id: 'trans_sample_2',
+    id: 'trans_t4m_2',
     creatorId: 'creator_creator2',
     creatorName: 'Creator Two',
     creatorHandle: 'creator2',
@@ -167,7 +162,7 @@ const sampleTransactions = [
     downlineIncome: { levelA: 0, levelB: 0, levelC: 0, total: 0 },
     liveMilestoneBonuses: { S: 0, N: 150, O: 0, P: 100 },
     teamMilestoneBonuses: { S: 0, N: 165, O: 0, P: 120 },
-    batchId: 'batch_sample_1',
+    batchId: 'batch_t4m_1',
     createdAt: admin.firestore.Timestamp.now(),
     calculationVersion: 'DEFINITIVE_v1.0'
   }
@@ -186,8 +181,8 @@ const sampleBonuses = [
     commissionRate: 0.30,
     creatorId: 'creator_creator1',
     creatorName: 'Creator One',
-    transactionId: 'trans_sample_1',
-    batchId: 'batch_sample_1',
+    transactionId: 'trans_t4m_1',
+    batchId: 'batch_t4m_1',
     period: '202506',
     month: '202506',
     calculatedAt: admin.firestore.Timestamp.now()
@@ -203,8 +198,8 @@ const sampleBonuses = [
     commissionRate: 0.35,
     creatorId: 'creator_creator1',
     creatorName: 'Creator One',
-    transactionId: 'trans_sample_1',
-    batchId: 'batch_sample_1',
+    transactionId: 'trans_t4m_1',
+    batchId: 'batch_t4m_1',
     period: '202506',
     month: '202506',
     calculatedAt: admin.firestore.Timestamp.now()
@@ -219,8 +214,8 @@ const sampleBonuses = [
     type: 'MILESTONE_HALF',
     creatorId: 'creator_creator1',
     creatorName: 'Creator One',
-    transactionId: 'trans_sample_1',
-    batchId: 'batch_sample_1',
+    transactionId: 'trans_t4m_1',
+    batchId: 'batch_t4m_1',
     period: '202506',
     month: '202506',
     calculatedAt: admin.firestore.Timestamp.now()
@@ -234,8 +229,8 @@ const sampleBonuses = [
     type: 'MILESTONE_1',
     creatorId: 'creator_creator1',
     creatorName: 'Creator One',
-    transactionId: 'trans_sample_1',
-    batchId: 'batch_sample_1',
+    transactionId: 'trans_t4m_1',
+    batchId: 'batch_t4m_1',
     period: '202506',
     month: '202506',
     calculatedAt: admin.firestore.Timestamp.now()
@@ -249,8 +244,8 @@ const sampleBonuses = [
     type: 'MILESTONE_2',
     creatorId: 'creator_creator1',
     creatorName: 'Creator One',
-    transactionId: 'trans_sample_1',
-    batchId: 'batch_sample_1',
+    transactionId: 'trans_t4m_1',
+    batchId: 'batch_t4m_1',
     period: '202506',
     month: '202506',
     calculatedAt: admin.firestore.Timestamp.now()
@@ -264,8 +259,8 @@ const sampleBonuses = [
     type: 'RETENTION',
     creatorId: 'creator_creator1',
     creatorName: 'Creator One',
-    transactionId: 'trans_sample_1',
-    batchId: 'batch_sample_1',
+    transactionId: 'trans_t4m_1',
+    batchId: 'batch_t4m_1',
     period: '202506',
     month: '202506',
     calculatedAt: admin.firestore.Timestamp.now()
@@ -274,9 +269,9 @@ const sampleBonuses = [
 
 const sampleUploadBatches = [
   {
-    id: 'batch_sample_1',
-    filename: 'july-2025-sample.xlsx',
-    originalName: 'july-2025-sample.xlsx',
+    id: 'batch_t4m_1',
+    filename: 'july-2025-t4m.xlsx',
+    originalName: 'july-2025-t4m.xlsx',
     status: 'COMPLETED',
     uploadedBy: 'admin@trend4media.com',
     uploadedAt: admin.firestore.Timestamp.now(),
@@ -295,7 +290,7 @@ const samplePayouts = [
     managerName: 'John Doe',
     amount: 1500.00,
     status: 'PENDING',
-    description: 'Monthly commission payout - July 2025',
+    description: 'T4M Monthly commission payout - July 2025',
     requestedAt: admin.firestore.Timestamp.now(),
     requestedBy: 'manager_john_doe'
   },
@@ -305,7 +300,7 @@ const samplePayouts = [
     managerName: 'Jane Smith',
     amount: 2200.00,
     status: 'APPROVED',
-    description: 'Monthly commission payout - July 2025',
+    description: 'T4M Monthly commission payout - July 2025',
     requestedAt: admin.firestore.Timestamp.now(),
     requestedBy: 'manager_jane_smith',
     processedAt: admin.firestore.Timestamp.now(),
@@ -318,14 +313,14 @@ const sampleMessages = [
   {
     userHandle: 'john-doe',
     module: 'COMMISSION',
-    content: 'Your commission for July 2025 has been calculated. Total earnings: €1,500.00',
+    content: 'T4M: Your commission for July 2025 has been calculated. Total earnings: €1,500.00',
     read: false,
     createdAt: admin.firestore.Timestamp.now()
   },
   {
     userHandle: 'jane-smith',
     module: 'PAYOUT',
-    content: 'Your payout request for €2,200.00 has been approved and will be processed within 3-5 business days.',
+    content: 'T4M: Your payout request for €2,200.00 has been approved and will be processed within 3-5 business days.',
     read: true,
     createdAt: admin.firestore.Timestamp.now()
   }
@@ -425,10 +420,11 @@ async function seedAuditLogs() {
   const auditLogs = [
     {
       userId: 'admin@trend4media.com',
-      action: 'SEED_DATA_CREATED',
+      action: 'T4M_BILLING_SEED_DATA_CREATED',
       details: {
-        description: 'Initial seed data created',
+        description: 'T4M Billing initial seed data created',
         collections: ['managers', 'creators', 'transactions', 'bonuses', 'genealogy', 'payouts', 'messages'],
+        project: 't4m-billing',
         timestamp: new Date().toISOString()
       },
       timestamp: admin.firestore.Timestamp.now()
@@ -442,9 +438,10 @@ async function seedAuditLogs() {
 }
 
 // Main seed function
-async function seedDatabase() {
+async function seedT4MBilling() {
   try {
-    console.log('🚀 Starting Firestore database seeding...');
+    console.log('🚀 Starting T4M Billing Firestore seeding...');
+    console.log('Projekt: t4m-billing');
     console.log('=====================================');
 
     await seedManagers();
@@ -459,7 +456,7 @@ async function seedDatabase() {
     await seedAuditLogs();
 
     console.log('=====================================');
-    console.log('✅ Database seeding completed successfully!');
+    console.log('✅ T4M Billing database seeding completed successfully!');
     console.log('');
     console.log('📊 Summary:');
     console.log(`   - ${sampleManagers.length} managers`);
@@ -472,10 +469,15 @@ async function seedDatabase() {
     console.log(`   - ${sampleMessages.length} messages`);
     console.log(`   - ${sampleManagerMonthlyNet.length} monthly net records`);
     console.log('');
+    console.log('🌐 URLs:');
+    console.log('  - Firebase Console: https://console.firebase.google.com/u/0/project/t4m-billing/overview');
+    console.log('  - Firestore: https://console.firebase.google.com/u/0/project/t4m-billing/firestore/data');
+    console.log('  - API: https://europe-west1-t4m-billing.cloudfunctions.net/api');
+    console.log('');
     console.log('🎯 You can now start the application and test the functionality!');
 
   } catch (error) {
-    console.error('❌ Error seeding database:', error);
+    console.error('❌ Error seeding T4M Billing database:', error);
     process.exit(1);
   } finally {
     process.exit(0);
@@ -484,11 +486,11 @@ async function seedDatabase() {
 
 // Run the seed function
 if (require.main === module) {
-  seedDatabase();
+  seedT4MBilling();
 }
 
 module.exports = {
-  seedDatabase,
+  seedT4MBilling,
   sampleManagers,
   sampleCreators,
   sampleTransactions,

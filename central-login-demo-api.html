@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trend4Media Billing - Login (Demo API)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .test-accounts {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .test-accounts h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .test-account {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .test-account:last-child {
+            margin-bottom: 0;
+        }
+
+        .test-account-info {
+            flex: 1;
+        }
+
+        .test-account-role {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 14px;
+        }
+
+        .test-account-credentials {
+            color: #666;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .test-account-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .test-account-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .system-status {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .system-status.online {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #3c3;
+        }
+
+        .system-status.offline {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #c33;
+        }
+
+        .system-status.checking {
+            background: #fef;
+            color: #cc3;
+            border: 1px solid #cc3;
+        }
+
+        .api-info {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>Trend4Media</h1>
+            <p>Billing System</p>
+        </div>
+
+        <div class="api-info">
+            🚀 <strong>Demo API:</strong> Verwendet lokalen Demo-Server (Port 3001)
+        </div>
+
+        <div id="systemStatus" class="system-status checking">
+            🔄 API wird überprüft...
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Benutzername</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Passwort</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                Anmelden
+            </button>
+        </form>
+
+        <div id="loading" class="loading">
+            🔄 Anmeldung läuft...
+        </div>
+
+        <div class="test-accounts">
+            <h3>Test-Accounts</h3>
+            
+            <div class="test-account">
+                <div class="test-account-info">
+                    <div class="test-account-role">👑 Administrator</div>
+                    <div class="test-account-credentials">admin / admin123</div>
+                </div>
+                <button type="button" class="test-account-btn" onclick="fillTestAccount('admin', 'admin123')">
+                    Verwenden
+                </button>
+            </div>
+
+            <div class="test-account">
+                <div class="test-account-info">
+                    <div class="test-account-role">📊 Live Manager</div>
+                    <div class="test-account-credentials">live_manager_1 / manager123</div>
+                </div>
+                <button type="button" class="test-account-btn" onclick="fillTestAccount('live_manager_1', 'manager123')">
+                    Verwenden
+                </button>
+            </div>
+
+            <div class="test-account">
+                <div class="test-account-info">
+                    <div class="test-account-role">👥 Team Manager</div>
+                    <div class="test-account-credentials">team_manager_1 / manager123</div>
+                </div>
+                <button type="button" class="test-account-btn" onclick="fillTestAccount('team_manager_1', 'manager123')">
+                    Verwenden
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo API Server URL
+        const API_BASE_URL = 'http://localhost:3001';
+        
+        // System Status prüfen
+        async function checkSystemStatus() {
+            const statusEl = document.getElementById('systemStatus');
+            statusEl.className = 'system-status checking';
+            statusEl.textContent = '🔄 API wird überprüft...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    statusEl.className = 'system-status online';
+                    statusEl.textContent = `✅ API ist online (${data.service})`;
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                console.error('API check failed:', error);
+                statusEl.className = 'system-status offline';
+                statusEl.textContent = '❌ Demo API ist offline - Bitte starten Sie: node demo-api-server.js';
+                return false;
+            }
+        }
+
+        // Login-Funktion
+        async function login(username, password) {
+            const loginBtn = document.getElementById('loginBtn');
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            // UI zurücksetzen
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            loginBtn.disabled = true;
+            loading.classList.add('show');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    successMessage.textContent = `✅ Anmeldung erfolgreich! Willkommen, ${data.user.name}`;
+                    successMessage.style.display = 'block';
+                    
+                    // Token speichern
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userRole', data.user.role);
+                    localStorage.setItem('userName', data.user.name);
+                    localStorage.setItem('managerType', data.user.managerType || '');
+                    
+                    // Nach 1 Sekunde weiterleiten
+                    setTimeout(() => {
+                        if (data.user.role === 'admin') {
+                            window.location.href = 'admin-dashboard.html';
+                        } else if (data.user.role === 'manager') {
+                            window.location.href = 'manager-dashboard.html';
+                        } else {
+                            window.location.href = 'index.html';
+                        }
+                    }, 1000);
+                } else {
+                    throw new Error(data.message || 'Anmeldung fehlgeschlagen');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorMessage.textContent = `❌ Fehler: ${error.message}`;
+                errorMessage.style.display = 'block';
+            } finally {
+                loginBtn.disabled = false;
+                loading.classList.remove('show');
+            }
+        }
+
+        // Test-Account füllen
+        function fillTestAccount(username, password) {
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+        }
+
+        // Event Listeners
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            await login(username, password);
+        });
+
+        // System Status beim Laden prüfen
+        document.addEventListener('DOMContentLoaded', () => {
+            checkSystemStatus();
+        });
+    </script>
+</body>
+</html>

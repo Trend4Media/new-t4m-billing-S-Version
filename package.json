@@ -1,39 +1,40 @@
 {
-  "name": "t4m-billing-system",
+  "name": "trend4media-functions",
+  "description": "Firebase Cloud Functions for T4M Billing System",
   "version": "1.0.0",
-  "description": "T4M Billing and Commission Management System - Firebase Edition",
   "scripts": {
-    "dev": "firebase emulators:start",
-    "start": "cd trend4media-frontend && npm run dev",
-    "start:prod": "cd trend4media-frontend && npm run start:prod",
-    "build": "cd trend4media-frontend && npm run build && npm run export",
-    "deploy": "./deploy-firebase.sh",
-    "deploy:functions": "firebase deploy --only functions",
-    "deploy:hosting": "firebase deploy --only hosting",
-    "deploy:firestore": "firebase deploy --only firestore",
+    "build": "echo 'No build needed - using JS directly'",
+    "build:watch": "echo 'No build needed - using JS directly'",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "setup": "npm run install:frontend && npm run install:functions",
-    "install:frontend": "cd trend4media-frontend && npm install",
-    "install:functions": "cd functions && npm install",
-    "test:commission": "node test-new-commission-logic.js"
-  },
-  "keywords": [
-    "billing",
-    "commission",
-    "firebase",
-    "react",
-    "nextjs",
-    "cloud-functions"
-  ],
-  "author": "T4M Team",
-  "license": "Private",
-  "devDependencies": {
-    "firebase-tools": "^13.21.0"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint *.js --fix"
   },
   "engines": {
-    "node": "18"
+    "node": "20"
   },
+  "main": "index.js",
   "dependencies": {
-    "xlsx": "^0.18.5"
-  }
-}
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^6.4.0",
+    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.17",
+    "xlsx": "^0.18.5",
+    "joi": "^17.13.3"
+  },
+  "devDependencies": {
+    "eslint": "^9.18.0",
+    "jest": "^29.7.0",
+    "firebase-functions-test": "^3.3.0"
+  },
+  "private": true
+} 

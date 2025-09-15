@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T4M Billing - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .role-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .role-info h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-info p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-accounts {
+            background: #e8f4fd;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .test-accounts h4 {
+            color: #0066cc;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-accounts .account {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+            padding: 0.2rem;
+            border-radius: 5px;
+            transition: background 0.2s ease;
+        }
+
+        .test-accounts .account:hover {
+            background: rgba(0, 102, 204, 0.1);
+        }
+
+        .test-accounts .role {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .test-accounts .credentials {
+            color: #666;
+        }
+
+        .cors-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">T4M</div>
+        <h1>T4M Billing System</h1>
+        <p class="subtitle">Zentrales Login für Administratoren und Manager</p>
+        
+        <div class="cors-info">
+            <strong>🔧 CORS-Fix aktiv:</strong> Diese Version verwendet einen CORS-Proxy für GitHub Pages.
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">E-Mail-Adresse</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Passwort</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                Anmelden
+            </button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Anmeldung wird verarbeitet...</p>
+        </div>
+        
+        <div class="role-info">
+            <h3>Rollenbasierte Weiterleitung</h3>
+            <p><strong>Admin:</strong> Vollzugriff auf alle Funktionen</p>
+            <p><strong>Live Manager:</strong> Zugriff auf Manager-Dashboard</p>
+            <p><strong>Team Manager:</strong> Zugriff auf Manager-Dashboard</p>
+        </div>
+        
+        <div class="test-accounts">
+            <h4>Test-Accounts (Klicken zum Einloggen)</h4>
+            <div class="account" onclick="quickLogin('admin@trend4media.com', 'admin123')">
+                <span class="role">Admin:</span>
+                <span class="credentials">admin@trend4media.com / admin123</span>
+            </div>
+            <div class="account" onclick="quickLogin('live@trend4media.com', 'manager123')">
+                <span class="role">Live Manager:</span>
+                <span class="credentials">live@trend4media.com / manager123</span>
+            </div>
+            <div class="account" onclick="quickLogin('team@trend4media.com', 'manager123')">
+                <span class="role">Team Manager:</span>
+                <span class="credentials">team@trend4media.com / manager123</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CORS-Proxy Konfiguration
+        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+        const API_BASE_URL = 'https://europe-west1-t4m-billing.cloudfunctions.net/api';
+        const PROXIED_API_URL = CORS_PROXY + API_BASE_URL;
+        
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        // Login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Show loading state
+            loginBtn.disabled = true;
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${PROXIED_API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Store token and user data
+                    localStorage.setItem('authToken', data.access_token);
+                    localStorage.setItem('userData', JSON.stringify(data.user));
+                    
+                    // Redirect based on role
+                    redirectBasedOnRole(data.user.role);
+                } else {
+                    throw new Error(data.error || 'Anmeldung fehlgeschlagen');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError(error.message);
+            } finally {
+                // Hide loading state
+                loginBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+        
+        // Redirect based on user role
+        function redirectBasedOnRole(role) {
+            switch (role) {
+                case 'admin':
+                    window.location.href = 'admin-dashboard.html';
+                    break;
+                case 'manager':
+                    window.location.href = 'manager-dashboard.html';
+                    break;
+                default:
+                    showError('Unbekannte Benutzerrolle');
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+        
+        // Check if already logged in
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('authToken');
+            const userData = localStorage.getItem('userData');
+            
+            if (token && userData) {
+                const user = JSON.parse(userData);
+                redirectBasedOnRole(user.role);
+            }
+        });
+        
+        // Quick login function
+        function quickLogin(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            loginForm.dispatchEvent(new Event('submit'));
+        }
+        
+        // Test CORS proxy on load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(`${PROXIED_API_URL}/health`);
+                if (response.ok) {
+                    console.log('✅ CORS-Proxy funktioniert');
+                } else {
+                    console.log('⚠️ CORS-Proxy möglicherweise nicht verfügbar');
+                }
+            } catch (error) {
+                console.log('❌ CORS-Proxy nicht verfügbar - verwenden Sie lokale Lösung');
+            }
+        });
+    </script>
+</body>
+</html>

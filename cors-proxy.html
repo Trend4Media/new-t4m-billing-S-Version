@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Proxy - T4M Billing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 CORS Proxy für T4M Billing</h1>
+        <p>Dieser Proxy löst CORS-Probleme zwischen GitHub Pages und Firebase Functions.</p>
+        
+        <div id="status" class="status info">
+            Proxy bereit - Warten auf Anfragen...
+        </div>
+        
+        <h3>Verwendung:</h3>
+        <p>Ersetzen Sie in Ihren HTML-Dateien:</p>
+        <pre>https://europe-west1-t4m-billing.cloudfunctions.net/api</pre>
+        <p>durch:</p>
+        <pre id="proxyUrl">https://cors-anywhere.herokuapp.com/https://europe-west1-t4m-billing.cloudfunctions.net/api</pre>
+        
+        <button onclick="copyProxyUrl()">URL kopieren</button>
+        
+        <h3>Alternative: Lokaler Proxy</h3>
+        <p>Falls der Heroku-Proxy nicht funktioniert, können Sie einen lokalen Proxy starten:</p>
+        <pre>npx cors-anywhere</pre>
+    </div>
+
+    <script>
+        function copyProxyUrl() {
+            const proxyUrl = document.getElementById('proxyUrl').textContent;
+            navigator.clipboard.writeText(proxyUrl).then(() => {
+                document.getElementById('status').innerHTML = '✅ Proxy-URL kopiert!';
+                document.getElementById('status').className = 'status success';
+            });
+        }
+        
+        // Teste den Proxy
+        async function testProxy() {
+            try {
+                const response = await fetch('https://cors-anywhere.herokuapp.com/https://europe-west1-t4m-billing.cloudfunctions.net/api/health');
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '✅ Proxy funktioniert!';
+                    document.getElementById('status').className = 'status success';
+                } else {
+                    throw new Error('Proxy test failed');
+                }
+            } catch (error) {
+                document.getElementById('status').innerHTML = '❌ Proxy nicht verfügbar - Verwenden Sie lokale Lösung';
+                document.getElementById('status').className = 'status error';
+            }
+        }
+        
+        // Teste beim Laden
+        window.addEventListener('load', testProxy);
+    </script>
+</body>
+</html>

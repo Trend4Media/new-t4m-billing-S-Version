@@ -373,13 +373,13 @@
             const userData = localStorage.getItem('userData');
             
             if (!token || !userData) {
-                window.location.href = '/central-login.html';
+                window.location.href = 'https://trend4media.github.io/new-t4m-billing-S-Version/central-login-working.html';
                 return;
             }
             
             const user = JSON.parse(userData);
             if (user.role !== 'manager') {
-                window.location.href = '/central-login.html';
+                window.location.href = 'https://trend4media.github.io/new-t4m-billing-S-Version/central-login-working.html';
                 return;
             }
             
@@ -528,7 +528,7 @@
         function logout() {
             localStorage.removeItem('authToken');
             localStorage.removeItem('userData');
-            window.location.href = '/central-login.html';
+            window.location.href = 'https://trend4media.github.io/new-t4m-billing-S-Version/central-login-working.html';
         }
     </script>
 </body>

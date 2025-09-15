@@ -14,6 +14,7 @@
     "test:watch": "jest --watch",
     "lint": "eslint *.js --fix",
     "seed": "node seed-firestore-data.js",
+    "seed:t4m": "node seed-t4m-billing.js",
     "setup:firebase": "firebase init firestore && firebase init functions && firebase init hosting",
     "deploy:all": "firebase deploy",
     "deploy:rules": "firebase deploy --only firestore:rules",

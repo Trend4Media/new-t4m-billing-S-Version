@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T4M Billing - Manager Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .manager-type {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .welcome-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-section p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .earnings-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .earnings-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .earnings-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .earnings-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .earnings-icon.base { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .earnings-icon.milestone { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .earnings-icon.downline { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .earnings-icon.total { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+
+        .earnings-amount {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .earnings-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .diamond-badge {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .action-icon.earnings { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .action-icon.transactions { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .action-icon.payouts { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .action-icon.team { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+
+        .action-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .recent-transactions {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .recent-transactions h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.2rem;
+        }
+
+        .transaction-date {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            color: #43e97b;
+            font-size: 1.1rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .earnings-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">T4M Billing - Manager Dashboard</div>
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">M</div>
+            <div>
+                <div id="userName">Manager</div>
+                <div class="manager-type" id="managerType">LIVE MANAGER</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Abmelden</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1>Willkommen im Manager-Dashboard</h1>
+            <p>Übersicht über Ihre Einnahmen, Transaktionen und Team-Performance</p>
+        </div>
+
+        <div class="earnings-overview" id="earningsOverview">
+            <div class="earnings-card">
+                <div class="earnings-icon base">💰</div>
+                <div class="earnings-amount" id="baseCommission">-</div>
+                <div class="earnings-label">Basis-Provision</div>
+            </div>
+            <div class="earnings-card">
+                <div class="earnings-icon milestone">🎯</div>
+                <div class="earnings-amount" id="milestoneBonuses">-</div>
+                <div class="earnings-label">Meilenstein-Boni</div>
+            </div>
+            <div class="earnings-card">
+                <div class="earnings-icon downline">👥</div>
+                <div class="earnings-amount" id="downlineIncome">-</div>
+                <div class="earnings-label">Downline-Provision</div>
+            </div>
+            <div class="earnings-card">
+                <div class="earnings-icon total">📈</div>
+                <div class="earnings-amount" id="totalEarnings">-</div>
+                <div class="earnings-label">Gesamteinnahmen</div>
+                <div class="diamond-badge" id="diamondBadge" style="display: none;">💎 Diamond Goal erreicht!</div>
+            </div>
+        </div>
+
+        <div class="actions-grid">
+            <div class="action-card" onclick="navigateTo('/earnings')">
+                <div class="action-icon earnings">💰</div>
+                <div class="action-title">Detaillierte Einnahmen</div>
+                <div class="action-description">Vollständige Aufschlüsselung aller Einnahmen und Boni</div>
+            </div>
+            <div class="action-card" onclick="navigateTo('/transactions')">
+                <div class="action-icon transactions">📋</div>
+                <div class="action-title">Transaktions-Historie</div>
+                <div class="action-description">Alle Ihre Transaktionen und Creator-Performance</div>
+            </div>
+            <div class="action-card" onclick="navigateTo('/payouts')">
+                <div class="action-icon payouts">💳</div>
+                <div class="action-title">Payout-Status</div>
+                <div class="action-description">Auszahlungsanträge und -status verfolgen</div>
+            </div>
+            <div class="action-card" onclick="navigateTo('/team')">
+                <div class="action-icon team">👥</div>
+                <div class="action-title">Team-Übersicht</div>
+                <div class="action-description">Ihre Creator und deren Performance</div>
+            </div>
+        </div>
+
+        <div class="recent-transactions">
+            <h2>Letzte Transaktionen</h2>
+            <div id="recentTransactions">
+                <div class="loading">Lade Transaktionen...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE_URL = 'https://europe-west1-t4m-billing.cloudfunctions.net/api';
+        
+        // Check authentication
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('authToken');
+            const userData = localStorage.getItem('userData');
+            
+            if (!token || !userData) {
+                window.location.href = '/central-login.html';
+                return;
+            }
+            
+            const user = JSON.parse(userData);
+            if (user.role !== 'manager') {
+                window.location.href = '/central-login.html';
+                return;
+            }
+            
+            // Update UI with user data
+            document.getElementById('userName').textContent = user.firstName + ' ' + user.lastName;
+            document.getElementById('userAvatar').textContent = user.firstName.charAt(0);
+            document.getElementById('managerType').textContent = user.managerType || 'MANAGER';
+            
+            // Load dashboard data
+            loadManagerData();
+        });
+        
+        // Load manager-specific data
+        async function loadManagerData() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                
+                // Load manager earnings for current month
+                const currentMonth = new Date().toISOString().slice(0, 7).replace('-', '');
+                const earningsResponse = await fetch(`${API_BASE_URL}/managers/${userData.id}/earnings?month=${currentMonth}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (earningsResponse.ok) {
+                    const earningsData = await earningsResponse.json();
+                    updateEarningsDisplay(earningsData);
+                } else {
+                    // Fallback: Load from bonuses
+                    await loadEarningsFromBonuses();
+                }
+                
+                // Load recent transactions
+                await loadRecentTransactions();
+                
+            } catch (error) {
+                console.error('Error loading manager data:', error);
+                document.getElementById('earningsOverview').innerHTML = '<div class="error">Fehler beim Laden der Manager-Daten</div>';
+            }
+        }
+        
+        // Load earnings from bonuses collection
+        async function loadEarningsFromBonuses() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                
+                const bonusesResponse = await fetch(`${API_BASE_URL}/bonuses`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (bonusesResponse.ok) {
+                    const bonusesData = await bonusesResponse.json();
+                    const managerBonuses = bonusesData.filter(bonus => bonus.managerId === userData.id);
+                    
+                    const earnings = {
+                        baseCommission: 0,
+                        milestoneBonuses: 0,
+                        downlineBonus: 0,
+                        totalPayout: 0
+                    };
+                    
+                    managerBonuses.forEach(bonus => {
+                        if (bonus.type === 'BASE_COMMISSION') {
+                            earnings.baseCommission += bonus.amount || 0;
+                        } else if (bonus.type.includes('MILESTONE') || bonus.type === 'RETENTION') {
+                            earnings.milestoneBonuses += bonus.amount || 0;
+                        } else if (bonus.type === 'DOWNLINE_PROVISION') {
+                            earnings.downlineBonus += bonus.amount || 0;
+                        }
+                    });
+                    
+                    earnings.totalPayout = earnings.baseCommission + earnings.milestoneBonuses + earnings.downlineBonus;
+                    updateEarningsDisplay(earnings);
+                }
+            } catch (error) {
+                console.error('Error loading earnings from bonuses:', error);
+            }
+        }
+        
+        // Update earnings display
+        function updateEarningsDisplay(earnings) {
+            document.getElementById('baseCommission').textContent = formatCurrency(earnings.baseCommission || 0);
+            document.getElementById('milestoneBonuses').textContent = formatCurrency(earnings.milestoneBonuses || 0);
+            document.getElementById('downlineIncome').textContent = formatCurrency(earnings.downlineBonus || 0);
+            document.getElementById('totalEarnings').textContent = formatCurrency(earnings.totalPayout || 0);
+            
+            // Show diamond badge if diamond bonus is present
+            if (earnings.diamondBonus && earnings.diamondBonus > 0) {
+                document.getElementById('diamondBadge').style.display = 'inline-block';
+            }
+        }
+        
+        // Load recent transactions
+        async function loadRecentTransactions() {
+            try {
+                const token = localStorage.getItem('authToken');
+                
+                const transactionsResponse = await fetch(`${API_BASE_URL}/transactions`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                const transactionsData = await transactionsResponse.json();
+                const recentTransactions = transactionsData.slice(0, 5);
+                
+                const transactionsContainer = document.getElementById('recentTransactions');
+                
+                if (recentTransactions.length > 0) {
+                    transactionsContainer.innerHTML = recentTransactions.map(transaction => `
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <div class="transaction-title">${transaction.creatorName || 'Creator'}</div>
+                                <div class="transaction-date">${new Date(transaction.createdAt).toLocaleDateString('de-DE')}</div>
+                            </div>
+                            <div class="transaction-amount">+${formatCurrency(transaction.grossAmount || 0)}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    transactionsContainer.innerHTML = '<div class="no-data">Keine Transaktionen gefunden</div>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading recent transactions:', error);
+                document.getElementById('recentTransactions').innerHTML = '<div class="error">Fehler beim Laden der Transaktionen</div>';
+            }
+        }
+        
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('de-DE', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+        
+        // Navigation function
+        function navigateTo(path) {
+            // For now, just show an alert
+            // In a real implementation, this would navigate to the respective pages
+            alert(`Navigation zu: ${path}\n\nDiese Funktion wird in der vollständigen Implementierung verfügbar sein.`);
+        }
+        
+        // Logout function
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            window.location.href = '/central-login.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "name": "t4m-billing-system",
+  "version": "1.0.0",
+  "description": "T4M Billing and Commission Management System - Firebase Edition",
+  "scripts": {
+    "dev": "firebase emulators:start",
+    "start": "cd trend4media-frontend && npm run dev",
+    "start:prod": "cd trend4media-frontend && npm run start:prod",
+    "build": "cd trend4media-frontend && npm run build && npm run export",
+    "deploy": "./deploy-firebase.sh",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:firestore": "firebase deploy --only firestore",
+    "logs": "firebase functions:log",
+    "setup": "npm run install:frontend && npm run install:functions",
+    "install:frontend": "cd trend4media-frontend && npm install",
+    "install:functions": "cd functions && npm install",
+    "test:commission": "node test-new-commission-logic.js"
+  },
+  "keywords": [
+    "billing",
+    "commission",
+    "firebase",
+    "react",
+    "nextjs",
+    "cloud-functions"
+  ],
+  "author": "T4M Team",
+  "license": "Private",
+  "devDependencies": {
+    "firebase-tools": "^13.21.0"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
